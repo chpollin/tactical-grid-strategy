@@ -34,3 +34,5 @@ __pycache__/
 # Node (if future npm integration)
 node_modules/
 package-lock.json
+.claude/settings.local.json
+nul
