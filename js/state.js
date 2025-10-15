@@ -2,6 +2,11 @@
 import { GRID_SIZE, UNIT_STATS } from './constants.js';
 
 export let gameState = null;
+export let isAnimating = false;
+
+export function setAnimating(value) {
+    isAnimating = value;
+}
 
 export function initGameState() {
     gameState = {

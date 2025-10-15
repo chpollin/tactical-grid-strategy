@@ -1,5 +1,5 @@
 // game.js - Main Game Loop
-import { initGameState, gameState, getUnitById } from './state.js';
+import { initGameState, gameState, getUnitById, isAnimating, setAnimating } from './state.js';
 import { renderMap, getUnitAt, clearHighlights, highlightTiles, markSelectedUnit, moveUnit, animateAttack, updateUnitHP, animateDeath } from './map.js';
 import { getMovementRange } from './units.js';
 import { getAttackRange, executeAttack } from './combat.js';
@@ -21,7 +21,7 @@ export function initGame() {
 }
 
 export async function handleTileClick(x, y) {
-    if (gameState.winner) return;  // Spiel vorbei
+    if (gameState.winner || isAnimating) return;  // Spiel vorbei oder Animation läuft
 
     const clickedUnit = getUnitAt(x, y);
     const selectedUnit = gameState.selectedUnit ? getUnitById(gameState.selectedUnit) : null;
@@ -38,12 +38,14 @@ export async function handleTileClick(x, y) {
         const canMove = moveRange.some(tile => tile.x === x && tile.y === y);
 
         if (canMove) {
+            setAnimating(true);  // LOCK inputs
             await moveUnit(selectedUnit, x, y);  // AWAIT animation
             addLogEntry(`${selectedUnit.type} moved to [${x},${y}]`);
             renderMap();
 
             // Nach Bewegung: Attack-Range zeigen
             selectUnit(selectedUnit.id);
+            setAnimating(false);  // UNLOCK inputs
             return;
         }
     }
@@ -54,6 +56,8 @@ export async function handleTileClick(x, y) {
         const canAttack = attackRange.some(tile => tile.x === x && tile.y === y);
 
         if (canAttack) {
+            setAnimating(true);  // LOCK inputs
+
             // Animate attack
             await animateAttack(selectedUnit.id, clickedUnit.id);
 
@@ -90,6 +94,7 @@ export async function handleTileClick(x, y) {
             gameState.selectedUnit = null;
 
             checkWinCondition();
+            setAnimating(false);  // UNLOCK inputs
             return;
         }
     }
@@ -123,6 +128,10 @@ function selectUnit(unitId) {
 }
 
 async function endTurn() {
+    if (isAnimating) return;  // Prevent spam during animations
+
+    setAnimating(true);  // LOCK inputs
+
     // Reset alle Units des aktuellen Spielers
     gameState.units.forEach(unit => {
         if (unit.player === gameState.currentPlayer) {
@@ -146,6 +155,8 @@ async function endTurn() {
 
     // Show turn transition
     await showTurnTransition(gameState.currentPlayer);
+
+    setAnimating(false);  // UNLOCK inputs
 }
 
 function checkWinCondition() {

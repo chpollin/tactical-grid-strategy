@@ -38,9 +38,13 @@ export function moveUnit(unit, newX, newY) {
         const deltaX = newRect.left - oldRect.left;
         const deltaY = newRect.top - oldRect.top;
 
-        // Animate
-        unitElement.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
-        unitElement.classList.add('moving');
+        // Animate with requestAnimationFrame to prevent first-move teleport
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                unitElement.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+                unitElement.classList.add('moving');
+            });
+        });
 
         // Wait for animation, then update data
         setTimeout(() => {

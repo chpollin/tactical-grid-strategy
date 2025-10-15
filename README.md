@@ -146,17 +146,28 @@ Run tests according to [TESTING.md](TESTING.md):
 - [x] Turn system
 - [x] Victory condition
 
-### **Phase 2** ⏳ Planned
-- [ ] CSS animations
-- [ ] Terrain types (grass, forest, mountain)
-- [ ] Sound effects
-- [ ] Fog of war
+### **Phase 2: Visual Polish & Animations** ✅ Complete
+- [x] CSS animations (11 animations implemented)
+- [x] Smooth unit movement with slide transitions
+- [x] Attack effects (shake, damage flash, HP bar animations)
+- [x] Turn transition overlay
+- [x] Victory screen animations
+- [x] Button hover states & polish
+- [x] Input locking during animations
+- [x] Reduced motion accessibility support
+- [ ] Terrain types (grass, forest, mountain) - moved to Phase 4
+- [ ] Sound effects - moved to Phase 4
+- [ ] Fog of war - moved to Phase 4
 
-### **Phase 3** ⏳ Planned
-- [ ] Resource system (gold, wood)
-- [ ] Buildings (HQ, goldmine, tower)
-- [ ] Unit recruitment
-- [ ] Map editor
+### **Phase 3: Stability & Bug Fixes** ✅ Complete
+- [x] Input locking to prevent double-clicks during animations
+- [x] First move teleport bug fix (requestAnimationFrame)
+- [x] Turn overlay spam prevention
+- [x] Reduced motion accessibility (prefers-reduced-motion)
+- [ ] Resource system (gold, wood) - moved to Phase 4
+- [ ] Buildings (HQ, goldmine, tower) - moved to Phase 4
+- [ ] Unit recruitment - moved to Phase 4
+- [ ] Map editor - moved to Phase 4
 
 ### **Phase 4** ⏳ Planned
 - [ ] AI opponent (simple random)
