@@ -8,14 +8,16 @@ export function setAnimating(value) {
     isAnimating = value;
 }
 
-export function initGameState() {
+export function initGameState(aiEnabled = false) {
     gameState = {
         turn: 1,
         currentPlayer: 1,
         winner: null,
         map: createMap(),
         units: createInitialUnits(),
-        selectedUnit: null
+        selectedUnit: null,
+        aiEnabled: aiEnabled,
+        gameMode: aiEnabled ? 'pve' : 'pvp'
     };
 
     // Units in Map eintragen (tiles[y][x].unit = unitId)

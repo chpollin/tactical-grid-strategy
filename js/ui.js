@@ -3,8 +3,11 @@ import { gameState } from './state.js';
 
 export function updateUI() {
     // Current Player
-    document.getElementById('current-player').textContent =
-        `Spieler ${gameState.currentPlayer}'s Zug`;
+    const playerLabel = gameState.aiEnabled && gameState.currentPlayer === 2
+        ? `KI's Zug`
+        : `Spieler ${gameState.currentPlayer}'s Zug`;
+
+    document.getElementById('current-player').textContent = playerLabel;
 
     // Turn Counter
     document.getElementById('turn-counter').textContent =
@@ -29,8 +32,11 @@ export function addLogEntry(message) {
 }
 
 export function showVictoryScreen(winner) {
-    document.getElementById('victory-message').textContent =
-        `Spieler ${winner} gewinnt!`;
+    const winnerLabel = gameState.aiEnabled && winner === 2
+        ? 'KI gewinnt!'
+        : `Spieler ${winner} gewinnt!`;
+
+    document.getElementById('victory-message').textContent = winnerLabel;
     document.getElementById('victory-screen').classList.remove('hidden');
 }
 
@@ -39,7 +45,11 @@ export function showTurnTransition(playerNumber) {
         const overlay = document.getElementById('turn-overlay');
         const message = document.getElementById('turn-overlay-message');
 
-        message.textContent = `Spieler ${playerNumber}'s Zug`;
+        const playerLabel = gameState.aiEnabled && playerNumber === 2
+            ? `KI's Zug`
+            : `Spieler ${playerNumber}'s Zug`;
+
+        message.textContent = playerLabel;
         overlay.classList.remove('hidden', 'fading-out');
 
         // Show for 1 second, then fade out
@@ -52,4 +62,12 @@ export function showTurnTransition(playerNumber) {
             }, 150); // Match fade-out duration
         }, 1000);
     });
+}
+
+export function showAIThinking() {
+    document.getElementById('ai-thinking').classList.remove('hidden');
+}
+
+export function hideAIThinking() {
+    document.getElementById('ai-thinking').classList.add('hidden');
 }

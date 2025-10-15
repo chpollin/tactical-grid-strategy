@@ -17,6 +17,7 @@ A turn-based tactical strategy game built with **Vanilla JavaScript**. Features 
   - **Scout** - Fast movement, reconnaissance
   - **Archer** - Ranged attacks (2-3 tiles)
 - **🤝 Hot-Seat Multiplayer** - Two players on one device
+- **🤖 AI Opponent** - Play solo against computer AI
 - **💪 Combat System:**
   - Melee combat with counterattacks
   - Ranged combat without retaliation
@@ -59,11 +60,12 @@ A turn-based tactical strategy game built with **Vanilla JavaScript**. Features 
 
 ## 🎮 How to Play
 
-1. **Select a unit** - Click on your blue unit (Player 1)
-2. **Move** - Click on a green-highlighted tile
-3. **Attack** - Click on a red-highlighted enemy
-4. **End turn** - Click "Spielzug beenden" button
-5. **Win** - Eliminate all enemy units!
+1. **Choose mode** - Select Player vs Player or Player vs AI
+2. **Select a unit** - Click on your blue unit (Player 1)
+3. **Move** - Click on a green-highlighted tile
+4. **Attack** - Click on a red-highlighted enemy
+5. **End turn** - Click "Spielzug beenden" button
+6. **Win** - Eliminate all enemy units!
 
 ### **Unit Types**
 
@@ -99,6 +101,7 @@ tactical-grid-strategy/
 │   ├── map.js          # Map API & rendering
 │   ├── units.js        # Movement logic
 │   ├── combat.js       # Combat system
+│   ├── ai.js           # AI opponent logic
 │   ├── ui.js           # UI updates
 │   └── game.js         # Main game loop
 └── knowledge/          # Documentation (Obsidian Vault)
@@ -169,11 +172,14 @@ Run tests according to [TESTING.md](TESTING.md):
 - [ ] Unit recruitment - moved to Phase 4
 - [ ] Map editor - moved to Phase 4
 
-### **Phase 4** ⏳ Planned
-- [ ] AI opponent (simple random)
-- [ ] AI opponent (minimax algorithm)
-- [ ] Difficulty levels
-- [ ] Campaign mode
+### **Phase 4: AI Opponent** ✅ Complete
+- [x] Simple Random AI with heuristic targeting
+- [x] Game mode selection (PvP / PvE)
+- [x] AI thinking visualization
+- [x] Smooth AI turn transitions
+- [ ] Smart AI with minimax algorithm (Phase 5)
+- [ ] Difficulty levels (Phase 5)
+- [ ] Campaign mode (Phase 5)
 
 ---
 
@@ -191,10 +197,11 @@ Contributions welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) first.
 
 ## 📊 Stats
 
-- **Lines of Code:** ~590 (JS: 400, CSS: 150, HTML: 40)
-- **Documentation:** ~100 KB markdown
-- **Development Time:** ~3 hours
-- **Code:Docs Ratio:** 1:170
+- **Lines of Code:** ~900 (JS: 600, CSS: 250, HTML: 50)
+- **Features:** AI Opponent, 11 Animations, Accessibility
+- **Documentation:** ~120 KB markdown
+- **Development Time:** ~5 hours
+- **Code:Docs Ratio:** 1:135
 
 ---
 

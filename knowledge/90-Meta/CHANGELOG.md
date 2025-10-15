@@ -12,6 +12,76 @@ Alle wichtigen Änderungen am Projekt werden hier dokumentiert.
 
 ---
 
+## [5.0] - 2025-10-15
+
+### Added - Phase 4: AI Opponent
+- 🤖 **Simple Random AI Implementation**
+  - Vollständiges AI-Modul (`js/ai.js`, ~150 Zeilen)
+  - Heuristische Ziel-Auswahl (priorisiert low-HP Einheiten)
+  - Aggressive Strategie (Angriff > Bewegung)
+  - Move-then-Attack Sequenzen
+- 🎮 **Game Mode Selection**
+  - Modal beim Start: PvP oder PvE wählen
+  - Persistent mode tracking in state
+  - Separate event handling für beide Modi
+- 🧠 **AI Thinking Visualization**
+  - "KI denkt nach..." Overlay mit Spinner
+  - Künstliche Delays für bessere UX (800ms)
+  - Smooth Transitions zwischen AI-Aktionen
+- 🔄 **Automatische AI-Züge**
+  - AI übernimmt Spieler 2 in PvE-Modus
+  - Auto-End Turn nach AI-Aktionen
+  - Seamless Turn-Wechsel Player → AI → Player
+- 🎨 **UI-Anpassungen für AI**
+  - "KI's Zug" statt "Spieler 2's Zug"
+  - "KI gewinnt!" Victory Screen
+  - Mode-Selection mit Icons & Hover-Effekte
+
+### Changed
+- 📝 `js/state.js`: +2 Properties (`aiEnabled`, `gameMode`)
+- 🎮 `js/game.js`: +50 Zeilen (AI Integration, Mode Selection, `executeAITurnSequence()`)
+- 🎨 `js/ui.js`: +15 Zeilen (`showAIThinking()`, `hideAIThinking()`, AI-Labels)
+- 🏗️ `index.html`: +18 Zeilen (Mode Selection Modal, AI Thinking Overlay)
+- 💅 `css/style.css`: +130 Zeilen (Modal Styles, AI Spinner, Mode Buttons)
+- 📚 [[../../README|README.md]]: AI Feature dokumentiert, Stats aktualisiert
+- 📖 [[05-Implementation/PHASE4_PLAN|PHASE4_PLAN.md]]: Vollständiger Implementation Guide
+
+### New Module
+- `js/ai.js` (~150 Zeilen):
+  - `executeAITurn()` - Main AI Controller
+  - `executeUnitAction(unit)` - Per-Unit Decision Making
+  - `getValidMoves()`, `getValidAttacks()` - Action Discovery
+  - `evaluateAttackTarget()` - Heuristic Scoring
+  - `isAIPlayer()` - Mode Check Helper
+
+### Technical
+- **Decision Algorithm:** Simple Random mit Heuristik
+  - Attack priorisiert über Move
+  - Low-HP Targets bevorzugt
+  - High-Value Units bevorzugt (Warrior > Archer > Scout)
+- **Timing:**
+  - 500ms pre-thinking delay
+  - 800ms AI thinking overlay
+  - 250ms zwischen Unit-Selections
+  - 400ms zwischen Unit-Actions
+  - 300ms post-AI cleanup
+- **Architecture:** Reused existing game API (handleTileClick)
+
+### Impact
+- ✅ **Solo-Play möglich** - Kein zweiter Spieler nötig
+- ✅ **Strategische Herausforderung** - AI greift intelligent an
+- ✅ **Smooth UX** - Delays & Visualisierungen wirken professionell
+- ✅ **Foundation für Phase 5** - Minimax-AI kann aufbauen
+
+### Stats
+- **Neue Zeilen:** ~450 (JS: 300, CSS: 130, HTML: 20)
+- **Total LoC:** ~900 (JS: 600, CSS: 250, HTML: 50)
+- **Module:** 8 (inkl. ai.js)
+
+**Commit:** TBD | **Files:** 8 | **+450/-10 lines**
+
+---
+
 ## [4.0] - 2025-10-15
 
 ### Added - Phase 3: Stability & Bug Fixes
