@@ -33,3 +33,23 @@ export function showVictoryScreen(winner) {
         `Spieler ${winner} gewinnt!`;
     document.getElementById('victory-screen').classList.remove('hidden');
 }
+
+export function showTurnTransition(playerNumber) {
+    return new Promise((resolve) => {
+        const overlay = document.getElementById('turn-overlay');
+        const message = document.getElementById('turn-overlay-message');
+
+        message.textContent = `Spieler ${playerNumber}'s Zug`;
+        overlay.classList.remove('hidden', 'fading-out');
+
+        // Show for 1 second, then fade out
+        setTimeout(() => {
+            overlay.classList.add('fading-out');
+
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+                resolve();
+            }, 150); // Match fade-out duration
+        }, 1000);
+    });
+}

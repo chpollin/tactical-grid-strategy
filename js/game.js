@@ -1,9 +1,9 @@
 // game.js - Main Game Loop
 import { initGameState, gameState, getUnitById } from './state.js';
-import { renderMap, getUnitAt, clearHighlights, highlightTiles, markSelectedUnit, moveUnit } from './map.js';
+import { renderMap, getUnitAt, clearHighlights, highlightTiles, markSelectedUnit, moveUnit, animateAttack, updateUnitHP, animateDeath } from './map.js';
 import { getMovementRange } from './units.js';
 import { getAttackRange, executeAttack } from './combat.js';
-import { updateUI, addLogEntry, showVictoryScreen } from './ui.js';
+import { updateUI, addLogEntry, showVictoryScreen, showTurnTransition } from './ui.js';
 
 export function initGame() {
     initGameState();
@@ -20,7 +20,7 @@ export function initGame() {
     console.log('Game initialized!', gameState);
 }
 
-export function handleTileClick(x, y) {
+export async function handleTileClick(x, y) {
     if (gameState.winner) return;  // Spiel vorbei
 
     const clickedUnit = getUnitAt(x, y);
@@ -38,7 +38,7 @@ export function handleTileClick(x, y) {
         const canMove = moveRange.some(tile => tile.x === x && tile.y === y);
 
         if (canMove) {
-            moveUnit(selectedUnit, x, y);
+            await moveUnit(selectedUnit, x, y);  // AWAIT animation
             addLogEntry(`${selectedUnit.type} moved to [${x},${y}]`);
             renderMap();
 
@@ -54,9 +54,33 @@ export function handleTileClick(x, y) {
         const canAttack = attackRange.some(tile => tile.x === x && tile.y === y);
 
         if (canAttack) {
-            const result = executeAttack(selectedUnit.id, clickedUnit.id);
-            addLogEntry(`${selectedUnit.type} attacked ${clickedUnit.type} (${result.damage} dmg)`);
+            // Animate attack
+            await animateAttack(selectedUnit.id, clickedUnit.id);
 
+            // Execute combat
+            const result = executeAttack(selectedUnit.id, clickedUnit.id);
+
+            // Update HP bars with animation
+            if (!result.defenderDied) {
+                const defender = getUnitById(clickedUnit.id);
+                if (defender) updateUnitHP(defender.id, defender.hp, defender.maxHp);
+            }
+
+            if (result.counterDamage > 0 && !result.attackerDied) {
+                const attacker = getUnitById(selectedUnit.id);
+                if (attacker) updateUnitHP(attacker.id, attacker.hp, attacker.maxHp);
+            }
+
+            // Animate deaths
+            if (result.defenderDied) {
+                await animateDeath(clickedUnit.id);
+            }
+            if (result.attackerDied) {
+                await animateDeath(selectedUnit.id);
+            }
+
+            // Log
+            addLogEntry(`${selectedUnit.type} attacked ${clickedUnit.type} (${result.damage} dmg)`);
             if (result.counterDamage > 0) {
                 addLogEntry(`  Counterattack: ${result.counterDamage} dmg`);
             }
@@ -98,7 +122,7 @@ function selectUnit(unitId) {
     }
 }
 
-function endTurn() {
+async function endTurn() {
     // Reset alle Units des aktuellen Spielers
     gameState.units.forEach(unit => {
         if (unit.player === gameState.currentPlayer) {
@@ -119,6 +143,9 @@ function endTurn() {
     gameState.selectedUnit = null;
     updateUI();
     addLogEntry(`--- Spieler ${gameState.currentPlayer}'s Zug ---`);
+
+    // Show turn transition
+    await showTurnTransition(gameState.currentPlayer);
 }
 
 function checkWinCondition() {

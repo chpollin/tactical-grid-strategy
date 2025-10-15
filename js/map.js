@@ -16,13 +16,46 @@ export function getUnitAt(x, y) {
 
 // API: Unit bewegen (synchronisiert Map!)
 export function moveUnit(unit, newX, newY) {
+    return new Promise((resolve) => {
+        const oldX = unit.x;
+        const oldY = unit.y;
+
+        // Get tile elements
+        const oldTile = document.querySelector(`[data-x="${oldX}"][data-y="${oldY}"]`);
+        const newTile = document.querySelector(`[data-x="${newX}"][data-y="${newY}"]`);
+        const unitElement = oldTile?.querySelector('.unit');
+
+        if (!unitElement || !newTile) {
+            // Fallback: instant move
+            performMove(unit, newX, newY);
+            resolve();
+            return;
+        }
+
+        // Calculate pixel distance for animation
+        const oldRect = oldTile.getBoundingClientRect();
+        const newRect = newTile.getBoundingClientRect();
+        const deltaX = newRect.left - oldRect.left;
+        const deltaY = newRect.top - oldRect.top;
+
+        // Animate
+        unitElement.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+        unitElement.classList.add('moving');
+
+        // Wait for animation, then update data
+        setTimeout(() => {
+            performMove(unit, newX, newY);
+            resolve();
+        }, 500); // Match --anim-slow
+    });
+}
+
+function performMove(unit, newX, newY) {
     // ⚠️ KRITISCH: Map synchron halten!
     gameState.map.tiles[unit.y][unit.x].unit = null;  // Alte Position leeren
-
     unit.x = newX;
     unit.y = newY;
     unit.hasMoved = true;
-
     gameState.map.tiles[newY][newX].unit = unit.id;  // Neue Position setzen
 }
 
@@ -124,4 +157,79 @@ export function markSelectedUnit(unitId) {
         const unitDiv = tileDiv.querySelector('.unit');
         if (unitDiv) unitDiv.classList.add('selected');
     }
+}
+
+// Animate attack
+export function animateAttack(attackerId, defenderId) {
+    return new Promise((resolve) => {
+        const attacker = getUnitById(attackerId);
+        const defender = getUnitById(defenderId);
+
+        if (!attacker || !defender) {
+            resolve();
+            return;
+        }
+
+        // Get unit elements
+        const attackerTile = document.querySelector(`[data-x="${attacker.x}"][data-y="${attacker.y}"]`);
+        const defenderTile = document.querySelector(`[data-x="${defender.x}"][data-y="${defender.y}"]`);
+
+        const attackerUnit = attackerTile?.querySelector('.unit');
+        const defenderUnit = defenderTile?.querySelector('.unit');
+
+        // Attacker shakes
+        attackerUnit?.classList.add('attacking');
+
+        setTimeout(() => {
+            // Defender takes damage flash
+            defenderUnit?.classList.add('taking-damage');
+
+            setTimeout(() => {
+                attackerUnit?.classList.remove('attacking');
+                defenderUnit?.classList.remove('taking-damage');
+                resolve();
+            }, 300);
+        }, 150);
+    });
+}
+
+// Animate HP bar update
+export function updateUnitHP(unitId, newHP, maxHP) {
+    const unit = getUnitById(unitId);
+    if (!unit) return;
+
+    const tile = document.querySelector(`[data-x="${unit.x}"][data-y="${unit.y}"]`);
+    const hpBar = tile?.querySelector('.hp-bar');
+
+    if (hpBar) {
+        // Flash red, then transition to new width
+        hpBar.classList.add('damaged');
+        setTimeout(() => {
+            hpBar.style.width = `${(newHP / maxHP) * 100}%`;
+            setTimeout(() => {
+                hpBar.classList.remove('damaged');
+            }, 300);
+        }, 100);
+    }
+}
+
+// Animate unit death
+export function animateDeath(unitId) {
+    return new Promise((resolve) => {
+        const unit = getUnitById(unitId);
+        if (!unit) {
+            resolve();
+            return;
+        }
+
+        const tile = document.querySelector(`[data-x="${unit.x}"][data-y="${unit.y}"]`);
+        const unitElement = tile?.querySelector('.unit');
+
+        if (unitElement) {
+            unitElement.classList.add('dying');
+            setTimeout(resolve, 500);
+        } else {
+            resolve();
+        }
+    });
 }
