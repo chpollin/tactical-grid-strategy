@@ -1,7 +1,7 @@
 // combat.js - Combat Logic
 import { gameState, getUnitById, removeUnit, isValidPosition } from './state.js';
-import { getUnitAt } from './map.js';
-import { UNIT_STATS } from './constants.js';
+import { getUnitAt, getTileAt } from './map.js';
+import { UNIT_STATS, TERRAIN_TYPES } from './constants.js';
 
 export function getAttackRange(unit) {
     if (unit.hasAttacked) return [];
@@ -41,8 +41,17 @@ export function executeAttack(attackerId, defenderId) {
 
     if (!attacker || !defender) return null;
 
-    // Schaden berechnen
-    const damage = Math.max(1, attacker.attack - defender.defense);
+    // Get terrain defense bonuses
+    const defenderTile = getTileAt(defender.x, defender.y);
+    const defenderTerrain = TERRAIN_TYPES[defenderTile?.terrain];
+    const defenderBonus = defenderTerrain?.defenseBonus || 0;
+
+    const attackerTile = getTileAt(attacker.x, attacker.y);
+    const attackerTerrain = TERRAIN_TYPES[attackerTile?.terrain];
+    const attackerBonus = attackerTerrain?.defenseBonus || 0;
+
+    // Schaden berechnen (mit Terrain-Bonus)
+    const damage = Math.max(1, attacker.attack - (defender.defense + defenderBonus));
     defender.hp -= damage;
 
     let counterDamage = 0;
@@ -52,7 +61,7 @@ export function executeAttack(attackerId, defenderId) {
     // Gegenangriff (nur bei Nahkampf + Defender lebt)
     const distance = Math.abs(attacker.x - defender.x) + Math.abs(attacker.y - defender.y);
     if (defender.hp > 0 && distance === 1) {
-        counterDamage = Math.max(1, defender.attack - attacker.defense);
+        counterDamage = Math.max(1, defender.attack - (attacker.defense + attackerBonus));
         attacker.hp -= counterDamage;
     }
 

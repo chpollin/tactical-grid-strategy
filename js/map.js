@@ -1,6 +1,6 @@
 // map.js - Map-Rendering und Map-API (EINZIGE Map-Schnittstelle!)
 import { gameState, getUnitById, isValidPosition } from './state.js';
-import { PLAYER_COLORS } from './constants.js';
+import { PLAYER_COLORS, TERRAIN_TYPES } from './constants.js';
 
 // API: Tile-Zugriff
 export function getTileAt(x, y) {
@@ -85,11 +85,14 @@ function createTileElement(tile) {
     div.dataset.x = tile.x;
     div.dataset.y = tile.y;
 
-    // Schachbrett-Muster
-    if ((tile.x + tile.y) % 2 === 0) {
-        div.classList.add('tile-light');
+    // Terrain styling
+    const terrain = TERRAIN_TYPES[tile.terrain];
+    if (terrain) {
+        div.classList.add(terrain.cssClass);
+        div.dataset.terrain = tile.terrain;
     } else {
-        div.classList.add('tile-dark');
+        // Fallback to grassland
+        div.classList.add('tile-grassland');
     }
 
     // Unit rendern (falls vorhanden)
@@ -113,7 +116,12 @@ function createTileElement(tile) {
 function createUnitElement(unit) {
     const div = document.createElement('div');
     div.className = `unit unit-${unit.type} player-${unit.player}`;
-    div.style.backgroundColor = PLAYER_COLORS[unit.player];
+    div.id = unit.id;
+
+    // Add data attributes for CSS styling
+    div.dataset.player = unit.player;
+    div.dataset.faction = unit.faction;
+    div.dataset.type = unit.type;
 
     // HP-Balken
     const hpBar = document.createElement('div');

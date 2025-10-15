@@ -1,6 +1,7 @@
 // units.js - Movement Logic
 import { gameState, isValidPosition } from './state.js';
-import { getUnitAt } from './map.js';
+import { getUnitAt, getTileAt } from './map.js';
+import { TERRAIN_TYPES } from './constants.js';
 
 export function getMovementRange(unit) {
     // ⚠️ Attack→Move Verbot: Wenn hasAttacked, keine Bewegung!
@@ -41,7 +42,12 @@ export function getMovementRange(unit) {
             const occupyingUnit = getUnitAt(newX, newY);
             if (occupyingUnit) return;
 
-            queue.push({ x: newX, y: newY, distance: current.distance + 1 });
+            // Get terrain movement cost
+            const tile = getTileAt(newX, newY);
+            const terrain = TERRAIN_TYPES[tile?.terrain];
+            const moveCost = terrain?.moveCost || 1;
+
+            queue.push({ x: newX, y: newY, distance: current.distance + moveCost });
         });
     }
 
