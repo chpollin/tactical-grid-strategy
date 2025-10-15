@@ -1,0 +1,14 @@
+{
+  "legacyEditor": false,
+  "livePreview": true,
+  "defaultViewMode": "source",
+  "strictLineBreaks": false,
+  "showFrontmatter": true,
+  "alwaysUpdateLinks": true,
+  "newFileLocation": "folder",
+  "newFileFolderPath": "Templates",
+  "attachmentFolderPath": "./",
+  "useMarkdownLinks": true,
+  "showLineNumber": true,
+  "spellcheck": false
+}
