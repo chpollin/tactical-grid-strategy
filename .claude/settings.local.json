@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git push origin main)"
+      "Bash(git push origin main)",
+      "Bash(git add js/state.js js/game.js js/map.js css/style.css README.md)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nPhase 3: Stability & Bug Fixes\n\nImplemented critical bug fixes from professional playtest review.\n\nBug Fixes:\n- Input locking during animations prevents double-clicks/spam\n- First move teleport bug fixed with requestAnimationFrame\n- Turn overlay spam prevention with isAnimating flag\n- Buttons and board inputs disabled during animations\n\nAccessibility:\n- Reduced motion support (prefers-reduced-motion)\n- Instant animations for users with motion sensitivity\n- No infinite pulse animations in reduced motion mode\n\nTechnical Changes:\n- Added isAnimating flag to state.js (global animation lock)\n- Added setAnimating() helper function\n- Updated handleTileClick() to check isAnimating before processing\n- Updated endTurn() to prevent spam during transitions\n- Movement animations use double requestAnimationFrame for smooth start\n- Added CSS @media (prefers-reduced-motion) rules\n\nFiles Changed:\n- js/state.js: +4 lines (isAnimating flag & setter)\n- js/game.js: +10 lines (animation locking in move/attack/endTurn)\n- js/map.js: +4 lines (requestAnimationFrame fix)\n- css/style.css: +20 lines (reduced motion media query)\n- README.md: Updated roadmap (Phase 2 & 3 complete)\n\nImpact:\n- Game feels significantly more stable\n- No more double-move bugs\n- No more button spam issues\n- Accessible for motion-sensitive users\n- Professional, polished experience\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
     ],
     "deny": [],
     "ask": []
