@@ -1,0 +1,559 @@
+/* style.css - Tactical Grid Strategy */
+
+:root {
+    /* Animation Timings */
+    --anim-fast: 0.15s;
+    --anim-normal: 0.3s;
+    --anim-slow: 0.5s;
+
+    /* Easing Functions */
+    --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --ease-in-out: cubic-bezier(0.42, 0, 0.58, 1);
+    --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* Colors */
+    --color-damage: #e74c3c;
+    --color-heal: #2ecc71;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+#game-container {
+    max-width: 900px;
+    width: 100%;
+    padding: 20px;
+}
+
+/* Top Bar */
+#top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #34495e;
+    border-radius: 8px 8px 0 0;
+    margin-bottom: 0;
+}
+
+#current-player {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+#end-turn-btn {
+    padding: 10px 20px;
+    font-size: 1em;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all var(--anim-fast) var(--ease-out);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+#end-turn-btn:hover {
+    background-color: #c0392b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+#end-turn-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Game Board */
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 2px;
+    background-color: #34495e;
+    padding: 10px;
+    border-radius: 0 0 8px 8px;
+    aspect-ratio: 1;
+}
+
+.tile {
+    aspect-ratio: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.tile-light {
+    background-color: #95a5a6;
+}
+
+.tile-dark {
+    background-color: #7f8c8d;
+}
+
+.tile:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    transition: transform var(--anim-fast) var(--ease-out);
+}
+
+/* Highlights */
+.highlight-move {
+    background-color: rgba(46, 204, 113, 0.5) !important;
+    box-shadow: inset 0 0 10px #2ecc71;
+    animation: fadeIn var(--anim-fast) ease-out;
+}
+
+.highlight-attack {
+    background-color: rgba(231, 76, 60, 0.5) !important;
+    box-shadow: inset 0 0 10px #e74c3c;
+    animation: fadeIn var(--anim-fast) ease-out;
+}
+
+.tile.highlight-move:hover,
+.tile.highlight-attack:hover {
+    transform: scale(1.08);
+    cursor: pointer;
+}
+
+/* Units */
+.unit {
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    border: 3px solid #2c3e50;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    transition: transform var(--anim-normal) var(--ease-out),
+                opacity var(--anim-normal);
+}
+
+.unit.moving {
+    z-index: 100;
+    transition: all var(--anim-slow) var(--ease-out);
+}
+
+.unit.attacking {
+    animation: shake 0.3s ease-in-out;
+}
+
+.unit.taking-damage {
+    animation: damageFlash 0.3s ease-out;
+}
+
+.unit.dying {
+    animation: fadeOut 0.5s ease-out forwards;
+}
+
+.unit.selected {
+    border: 4px solid #f1c40f;
+    box-shadow: 0 0 15px #f1c40f;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.unit-icon {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+/* HP Bar */
+.hp-bar {
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    height: 4px;
+    background-color: #2ecc71;
+    transition: width 0.3s ease-out, background-color 0.2s;
+}
+
+.hp-bar.damaged {
+    background-color: #e74c3c;
+}
+
+/* Game Log */
+#game-log {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #34495e;
+    border-radius: 8px;
+}
+
+#game-log h3 {
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    color: #ecf0f1;
+}
+
+#log-list {
+    list-style: none;
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+
+#log-list li {
+    padding: 5px 0;
+    border-bottom: 1px solid #2c3e50;
+    animation: slideInFromBottom var(--anim-fast) ease-out;
+}
+
+#log-list li:last-child {
+    border-bottom: none;
+}
+
+/* Victory Screen */
+#victory-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn var(--anim-slow) ease-out;
+}
+
+#victory-screen.hidden {
+    display: none;
+}
+
+#victory-content {
+    background-color: #34495e;
+    padding: 50px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    animation: victoryPop var(--anim-slow) var(--ease-bounce);
+}
+
+#victory-message {
+    font-size: 3em;
+    margin-bottom: 30px;
+    color: #f1c40f;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    animation: pulse 1s ease-in-out infinite;
+}
+
+#new-game-btn {
+    padding: 15px 30px;
+    font-size: 1.2em;
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all var(--anim-fast) var(--ease-out);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+#new-game-btn:hover {
+    background-color: #27ae60;
+    transform: scale(1.05);
+}
+
+#new-game-btn:active {
+    transform: scale(0.98);
+}
+
+/* Turn Transition Overlay */
+#turn-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 500;
+    animation: fadeIn var(--anim-fast) ease-out;
+}
+
+#turn-overlay.hidden {
+    display: none;
+}
+
+#turn-overlay.fading-out {
+    animation: fadeOut var(--anim-fast) ease-out forwards;
+}
+
+#turn-overlay-content {
+    background-color: #34495e;
+    padding: 40px 80px;
+    border-radius: 10px;
+    text-align: center;
+    animation: pulse var(--anim-normal) var(--ease-bounce);
+}
+
+#turn-overlay-message {
+    font-size: 2.5em;
+    color: #f1c40f;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+/* Game Mode Selection Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    animation: fadeIn var(--anim-normal) ease-out;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background-color: #34495e;
+    padding: 50px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+    animation: victoryPop var(--anim-slow) var(--ease-bounce);
+}
+
+.modal-content h1 {
+    font-size: 2.5em;
+    color: #f1c40f;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.modal-content h2 {
+    font-size: 1.5em;
+    color: #ecf0f1;
+    margin-bottom: 30px;
+}
+
+.mode-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.mode-btn {
+    background-color: #2c3e50;
+    border: 3px solid #3498db;
+    border-radius: 10px;
+    padding: 30px 40px;
+    cursor: pointer;
+    transition: all var(--anim-normal) var(--ease-out);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 200px;
+    color: #ecf0f1;
+}
+
+.mode-btn:hover {
+    background-color: #3498db;
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 10px 30px rgba(52, 152, 219, 0.5);
+}
+
+.mode-btn:active {
+    transform: translateY(-2px) scale(1.02);
+}
+
+.mode-icon {
+    font-size: 3em;
+}
+
+.mode-title {
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+.mode-desc {
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+
+/* AI Thinking Overlay */
+#ai-thinking {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 600;
+    animation: fadeIn var(--anim-fast) ease-out;
+}
+
+#ai-thinking.hidden {
+    display: none;
+}
+
+#ai-thinking-content {
+    background-color: #34495e;
+    padding: 40px 60px;
+    border-radius: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+#ai-thinking-content h2 {
+    font-size: 1.8em;
+    color: #3498db;
+    margin: 0;
+}
+
+.ai-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #2c3e50;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #game-container {
+        padding: 10px;
+    }
+
+    #top-bar {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #victory-message {
+        font-size: 2em;
+    }
+}
+
+/* Keyframe Animations */
+@keyframes slideIn {
+    from {
+        transform: translate(var(--slide-x, 0), var(--slide-y, 0));
+        opacity: 0;
+    }
+    to {
+        transform: translate(0, 0);
+        opacity: 1;
+    }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes damageFlash {
+    0% { background-color: var(--color-damage); }
+    100% { background-color: transparent; }
+}
+
+@keyframes floatUp {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(-30px);
+        opacity: 0;
+    }
+}
+
+@keyframes slideInFromBottom {
+    from {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes victoryPop {
+    from {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Accessibility: Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .unit.selected {
+        animation: none;  /* No infinite pulse */
+        border: 4px solid #f1c40f;
+        box-shadow: 0 0 20px #f1c40f;
+    }
+
+    #victory-message {
+        animation: none;  /* No infinite pulse */
+    }
+}
