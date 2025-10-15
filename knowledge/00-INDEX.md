@@ -10,7 +10,7 @@ tags: [index, knowledge-vault, tactical-strategy]
 **Projekt:** Rundenbasiertes taktisches Strategiespiel
 **Technologie:** Vanilla JavaScript, HTML5, CSS3
 **Methode:** Promptotyping
-**Status:** MVP Complete ✅
+**Status:** Phase 3 Complete ✅ (Stable & Polished)
 
 ---
 
@@ -37,9 +37,9 @@ tags: [index, knowledge-vault, tactical-strategy]
 - [[04-Requirements/REQUIREMENTS|REQUIREMENTS]] - FR, NFR, Testfälle TC-1 bis TC-8
 
 #### **05 - Implementation** (Technische Umsetzung)
-- [[05-Implementation/IMPLEMENTATION_PLAN|IMPLEMENTATION_PLAN]] - Kompakter Step-by-Step Guide
-- [[05-Implementation/INSTRUCTIONS|INSTRUCTIONS]] - Detaillierte technische Anleitung (deprecated)
-- [[05-Implementation/umsetzungsplan|umsetzungsplan]] - Timeline & Phasen (deprecated)
+- [[05-Implementation/IMPLEMENTATION_PLAN|IMPLEMENTATION_PLAN]] - MVP Step-by-Step Guide (Phase 1)
+- [[05-Implementation/PHASE2_PLAN|PHASE2_PLAN]] - Visual Polish & Animations Implementation
+- [[05-Implementation/PHASE3_PLAN|PHASE3_PLAN]] - Stability & Bug Fixes Implementation
 
 #### **90 - Meta** (Projekt-Management)
 - [[90-Meta/CHANGELOG|CHANGELOG]] - Version-Historie
@@ -68,28 +68,43 @@ WHERE phase = "mvp"
 **Validierung:**
 - ✅ TC-1: Movement (tested)
 - ✅ TC-5: Turn-Wechsel (tested)
+- ✅ TC-9: Eingaben während Animation gesperrt (tested)
+- ✅ TC-10: Erster Move gleitet (tested)
+- ✅ TC-11: Turn-Overlay nicht spammbar (tested)
+- ✅ TC-12: Reduced Motion Support (tested)
 - ⏳ TC-2: Kampf (pending)
 - ⏳ TC-3: Archer-Fernkampf (pending)
 - ⏳ TC-6: Archer Adjacent-Verbot (pending)
 - ⏳ TC-7: Attack→Move Verbot (pending)
 - ⏳ TC-4: Victory-Screen (pending)
 
-### Phase 2 - ⏳ Planned
-- [ ] CSS-Animationen (Transitions)
-- [ ] Terrain-Typen (Grass, Forest, Mountain)
-- [ ] Sound-Effekte
-- [ ] Fog of War
+### Phase 2: Visual Polish & Animations - ✅ Complete
+- ✅ 11 CSS-Animationen (Movement, Attack, Death, Turn Transition, etc.)
+- ✅ Async/Await Animation Sequencing
+- ✅ CSS Variables for Timing & Easing
+- ✅ Turn Transition Overlay
+- See [[05-Implementation/PHASE2_PLAN|PHASE2_PLAN]] for details
 
-### Phase 3 - ⏳ Planned
+### Phase 3: Stability & Bug Fixes - ✅ Complete
+- ✅ Input Locking (isAnimating Flag)
+- ✅ First Move Teleport Fix (Double rAF)
+- ✅ Turn Overlay Spam Prevention
+- ✅ Reduced Motion Accessibility (WCAG 2.1 AA)
+- See [[05-Implementation/PHASE3_PLAN|PHASE3_PLAN]] for details
+
+### Phase 4: Strategic Depth - ⏳ Planned
+- [ ] Terrain-System (Grass, Forest, Mountain)
+- [ ] Sound-Effekte (Web Audio API)
 - [ ] Ressourcen-System (Gold, Wood)
 - [ ] Gebäude (HQ, Goldmine, Turm)
 - [ ] Einheiten rekrutieren
-- [ ] Map-Editor
 
-### Phase 4 - ⏳ Planned
+### Phase 5: AI & Advanced Features - ⏳ Planned
 - [ ] KI-Gegner (Simple Random)
 - [ ] KI-Gegner (Minimax)
 - [ ] Schwierigkeitsstufen
+- [ ] Map-Editor
+- [ ] Fog of War
 
 ---
 
@@ -107,6 +122,7 @@ WHERE phase = "mvp"
 
 ### Testing & Validation
 - [[04-Requirements/REQUIREMENTS#6 Testfälle|Test Cases TC-1 to TC-8]]
+- [[05-Implementation/PHASE3_PLAN#🧪 Test Cases|Test Cases TC-9 to TC-12]]
 - [[04-Requirements/REQUIREMENTS#8 Validierungs-Checkliste|Pre-Launch Checklist]]
 
 ---
@@ -114,9 +130,10 @@ WHERE phase = "mvp"
 ## 📊 Metriken & KPIs
 
 ### Code-Metriken
-- **Lines of Code:** ~400 (JS), ~150 (CSS), ~40 (HTML)
+- **Lines of Code:** ~500 (JS), ~300 (CSS), ~50 (HTML)
 - **Module Count:** 7 (constants, state, map, units, combat, ui, game)
-- **Dokumentation:** 8 Markdown-Dokumente (~75 KB)
+- **Dokumentation:** 13 Markdown-Dokumente (~120 KB)
+- **Animations:** 11 CSS keyframes + async/await integration
 
 ### Performance-Ziele (NFR)
 - Initial Load: < 2s ✅
@@ -124,9 +141,10 @@ WHERE phase = "mvp"
 - Frame-Rate: 60 FPS ✅
 
 ### Qualitäts-Metriken
-- Test Coverage: 8 Testfälle (TC-1 bis TC-8)
+- Test Coverage: 12 Testfälle (TC-1 bis TC-12, 8 validiert)
 - Code Review: Alle kritischen Checkpoints validiert
 - Browser-Support: Chrome, Firefox, Edge ✅
+- Accessibility: WCAG 2.1 Level AA (Reduced Motion) ✅
 
 ---
 
@@ -142,7 +160,9 @@ WHERE phase = "mvp"
 |---------|-------|------------|
 | **1.0** | 2025-10-15 | Initial MVP komplett |
 | **1.1** | 2025-10-15 | Feedback-Integration (Attack→Move, LoS, Tests) |
-| **2.0** | TBD | Obsidian Vault-Struktur |
+| **2.0** | 2025-10-15 | Obsidian Vault-Struktur |
+| **3.0** | 2025-10-15 | Phase 2: Visual Polish & Animations (11 Animations) |
+| **4.0** | 2025-10-15 | Phase 3: Stability & Bug Fixes (Input Lock, Accessibility) |
 
 Siehe [[90-Meta/CHANGELOG|CHANGELOG]] für Details.
 
@@ -155,16 +175,22 @@ Siehe [[90-Meta/CHANGELOG|CHANGELOG]] für Details.
 - ✅ Strikte Daten-Trennung (map.js als einzige Schnittstelle)
 - ✅ Feedback-Integration (3 neue Testfälle TC-6, TC-7, TC-8)
 - ✅ DOM-basiertes Rendering (schneller als Canvas für MVP)
+- ✅ Single Source of Truth Pattern (isAnimating Flag)
+- ✅ Double requestAnimationFrame für CSS Transitions
 
 ### Lessons Learned:
 - ⚠️ `tiles[y][x]` vs `[x][y]` - kritischster Fehler-Punkt
 - ⚠️ Attack→Move Verbot muss explizit kodiert werden
 - ⚠️ Archer minRange nicht vergessen (sonst adjacent-Angriff möglich)
+- ⚠️ async/await verhindert NICHT parallele User-Inputs (braucht globalen Lock)
+- ⚠️ CSS Transitions brauchen Frame-Separation (Double rAF Pattern)
 
 ### Nächste Optimierungen:
-- [ ] BFS-Pathfinding durch A* ersetzen (Phase 3)
+- [ ] State-Machine statt Boolean Flags (AnimState enum)
+- [ ] Animation-Queue statt Input-Blocking
+- [ ] BFS-Pathfinding durch A* ersetzen (Phase 4+)
 - [ ] Event Delegation statt Listener pro Tile (Performance)
-- [ ] State-History für Undo/Redo (Phase 5)
+- [ ] State-History für Undo/Redo (Phase 5+)
 
 ---
 

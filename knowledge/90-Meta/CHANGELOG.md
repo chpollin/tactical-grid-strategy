@@ -12,6 +12,96 @@ Alle wichtigen Änderungen am Projekt werden hier dokumentiert.
 
 ---
 
+## [4.0] - 2025-10-15
+
+### Added - Phase 3: Stability & Bug Fixes
+- 🛡️ **Input-Sperre während Animationen**
+  - Globaler `isAnimating` Flag in state.js
+  - Verhindert Doppel-Moves und State-Corruption
+  - Buttons während Animationen deaktiviert
+- 🐛 **First Move Teleport Bug Fix**
+  - Double `requestAnimationFrame` für smooth Transitions
+  - Erster Move gleitet jetzt korrekt
+- 🚫 **Turn-Overlay Spam-Prevention**
+  - `endTurn()` prüft `isAnimating` Flag
+  - Keine mehrfachen Turn-Wechsel mehr möglich
+- ♿ **Reduced Motion Accessibility**
+  - CSS `@media (prefers-reduced-motion)` Support
+  - WCAG 2.1 Level AA konform
+  - Infinite Pulse-Animationen deaktivierbar
+
+### Changed
+- 📝 [[../README|README.md]]: Roadmap aktualisiert (Phase 2 & 3 Complete)
+- 🎨 [[05-Implementation/PHASE3_PLAN|PHASE3_PLAN.md]]: Bug-Fix Dokumentation
+
+### Technical
+- `js/state.js`: +4 Zeilen (isAnimating Flag & Setter)
+- `js/game.js`: +10 Zeilen (Animation Locking)
+- `js/map.js`: +4 Zeilen (requestAnimationFrame Fix)
+- `css/style.css`: +20 Zeilen (Reduced Motion Media Query)
+
+### Impact
+- ✅ Game fühlt sich stabil und professionell an
+- ✅ Keine Doppel-Input Bugs mehr
+- ✅ Barrierefrei für Motion-Sensitive Nutzer
+
+**Commit:** `20757d1` | **Files:** 5 | **+68/-16 lines**
+
+---
+
+## [3.0] - 2025-10-15
+
+### Added - Phase 2: Visual Polish & Animations
+- 🎨 **11 CSS-Animationen implementiert**
+  - Smooth Unit Movement (0.5s slide transition)
+  - Attack Effects (shake, damage flash)
+  - HP Bar Animations (color transitions)
+  - Death Fade-Out (0.5s opacity)
+  - Turn Transition Overlay (bounce effect)
+  - Selection Pulse (infinite, gentle)
+  - Highlight Fade-In (move/attack ranges)
+  - Log Entry Slide-In
+  - Victory Screen Pop & Pulse
+  - Button Hover States (lift effect)
+  - Button Press Feedback
+- 🎬 **Async/Await Integration**
+  - `moveUnit()` returnt Promise
+  - `handleTileClick()` ist async
+  - `endTurn()` ist async
+  - Sequenzielle Animation-Execution
+- ✨ **CSS Variables für Timing**
+  - `--anim-fast: 0.15s`
+  - `--anim-normal: 0.3s`
+  - `--anim-slow: 0.5s`
+  - Easing Functions (ease-out, ease-bounce)
+- 🔄 **Turn Transition Overlay**
+  - HTML Element hinzugefügt
+  - "Spieler X's Zug" Message
+  - 1s Display + Fade-Out
+  - `showTurnTransition()` in ui.js
+
+### Changed
+- 🎨 `css/style.css`: +150 Zeilen (Keyframes, Variables, Animation Classes)
+- 🎮 `js/map.js`: +90 Zeilen (Animation Helper Functions)
+- 🎮 `js/game.js`: Async/Await für Animationen
+- 🎮 `js/ui.js`: +18 Zeilen (Turn Transition)
+- 📝 `index.html`: Turn Overlay Element
+
+### New Functions
+- `animateAttack(attackerId, defenderId)` - Attack Animation
+- `updateUnitHP(unitId, newHP, maxHP)` - HP Bar Animation
+- `animateDeath(unitId)` - Death Fade-Out
+- `showTurnTransition(playerNumber)` - Turn Overlay
+
+### Impact
+- ✅ Game fühlt sich 10x polierter an
+- ✅ Professionelles Game-Feel
+- ✅ Smooth, satisfying Animationen
+
+**Commit:** `95f050c` | **Files:** 6 | **+1236/-12 lines**
+
+---
+
 ## [2.0] - 2025-10-15
 
 ### Added
